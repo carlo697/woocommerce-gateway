@@ -1,0 +1,12 @@
+orden de compra:
+    wp_wc_order_stats
+
+productos de orden de compra:
+    wp_wc_order_product_lookup
+
+productos:
+    wp_posts
+
+informacion del producto (codigo, inventario):
+    wp_wc_product_meta_lookup
+
