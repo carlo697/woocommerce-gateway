@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderProductController;
 
 /*
@@ -30,3 +31,6 @@ Route::get("/order", [OrderController::class, 'index']);
 
 
 Route::get("/product_order", [OrderProductController::class, 'index']);
+
+
+Route::get("/customer", [CustomerController::class, 'index']);
