@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get("/prueba", function(Request $request) {
-    return DB::connection('woocommerce')->table('wp_posts')->where('post_type', 'product')->get();
+    return DB::connection('woocommerce')->table('wp_posts')->where('post_type', 'product')->orwhere('post_type', 'product_variation')->get();
 });
+
+
+Route::get("/order", [OrderController::class, 'index']);
+
+
+Route::get("/product_order", [OrderProductController::class, 'index']);

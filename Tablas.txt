@@ -10,3 +10,9 @@ productos:
 informacion del producto (codigo, inventario):
     wp_wc_product_meta_lookup
 
+
+kervis
+producto de prueba
+
+productos:
+    wp_posts => id : 213
