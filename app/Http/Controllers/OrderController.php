@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -35,7 +36,9 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        error_log("ok!!");
+        DB::connection("mysql")->insert('insert into data ( data) values (?)', [json_encode(["data"=> $request->all()])]);
+        return "ok";
     }
 
     /**

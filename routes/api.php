@@ -28,6 +28,7 @@ Route::get("/prueba", function(Request $request) {
 
 
 Route::get("/order", [OrderController::class, 'index']);
+Route::post("/order", [OrderController::class, 'store']);
 
 
 Route::get("/product_order", [OrderProductController::class, 'index']);
