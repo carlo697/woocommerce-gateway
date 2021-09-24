@@ -3,86 +3,54 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\WooOrder;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Order::with("customer", "products")->get();
+        return WooOrder::with("customer", "products")->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        error_log("ok!!");
-        DB::connection("mysql")->insert('insert into data ( data) values (?)', [json_encode(["data"=> $request->all()])]);
+        $data = $request->all();
+
+        // Ignorar las ordenes que no estén completadas
+        if ($data["status"] != "completed") {
+            error_log("La orden no está completada");
+            return;
+        }
+
+        // Obtener la id de la orden
+        $idOrden = $data["id"];
+
+        // Ignorar si ya se registro la orden anteriormente
+        $ordenEncontrada = Order::where("order_id", $idOrden)->first();
+        if ($ordenEncontrada) {
+            error_log("La orden ya se encuentra registrada");
+            return;
+        }
+
+        // Crear la orden nueva
+        $orden = new Order();
+        $orden->order_id = $idOrden;
+        $orden->save();
+
+        error_log("!Orden registrada con exito!");
+
+        // DB::connection("mysql")->insert('insert into data ( data) values (?)', [json_encode(["data" => $request->all()])]);
         return "ok";
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Order $order)
+    public function fake_store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Order $order)
-    {
-        //
+        error_log("Procesada orden en el inventario!!!");
+        sleep(20);
+        // throw new AuthorizationException("hola");
+        error_log("Devolver respuesta!!");
+        return "ok";
     }
 }

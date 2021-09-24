@@ -22,16 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/prueba", function(Request $request) {
-    return DB::connection('woocommerce')->table('wp_posts')->where('post_type', 'product')->orwhere('post_type', 'product_variation')->get();
-});
-
-
-Route::get("/order", [OrderController::class, 'index']);
-Route::post("/order", [OrderController::class, 'store']);
-
-
-Route::get("/product_order", [OrderProductController::class, 'index']);
-
-
-Route::get("/customer", [CustomerController::class, 'index']);
+Route::post("/orders", [OrderController::class, 'store']);
+Route::get("/woo_orders", [OrderController::class, 'index']);
+Route::post("/fake_orders", [OrderController::class, 'fake_store']);
