@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\WooOrder;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class OrderController extends Controller
 {
@@ -17,7 +18,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
 
-        error_log("*______________________________desde la consola ________________________________________________________________*/");
+        Log::error("*______________________________desde la consola ________________________________________________________________*/");
         $data = $request->all();
 
         // Ignorar las ordenes que no estén completadas
@@ -49,10 +50,10 @@ class OrderController extends Controller
 
     public function fake_store(Request $request)
     {
-        error_log("Procesada orden en el inventario!!!");
+        Log::error("Procesada orden en el inventario!!!");
         sleep(20);
         // throw new AuthorizationException("hola");
-        error_log("Devolver respuesta!!");
+        Log::error("Devolver respuesta!!");
         return "ok";
     }
 }
