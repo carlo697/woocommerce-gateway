@@ -51,7 +51,7 @@ class OrderController extends Controller
     public function fake_store(Request $request)
     {
         Log::error("Procesada orden en el inventario!!!");
-        sleep(20);
+
         // throw new AuthorizationException("hola");
         Log::error("Devolver respuesta!!");
         return "ok";
