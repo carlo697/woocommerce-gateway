@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
                     // Intentar informar al inventario de la compra que se hizo en el e-commerce
                     // EL catch se ejecutara en caso de que se supere el timeout
                     try {
-                        $response = Http::timeout(30)->post('http://localhost:8080/api/fake_orders', [
+                        $response = Http::timeout(30)->post('https://bodegones.website/api/fake_orders', [
                             'data' => 'example',
                         ]);
 
