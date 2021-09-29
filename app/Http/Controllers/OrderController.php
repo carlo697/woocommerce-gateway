@@ -16,6 +16,8 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+
+        error_log("*______________________________desde la consola ________________________________________________________________*/");
         $data = $request->all();
 
         // Ignorar las ordenes que no estén completadas
