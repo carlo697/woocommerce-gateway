@@ -17,9 +17,11 @@ class OrderController extends Controller
             'consumer_secret' => 'cs_a345f84f9e90c71feeaca7aa2b443060bb57f3d0',
         ]);
 
-        $data = json_decode($response);
+        return $data = json_decode($response);
         // return $data;
+        
         return new OrderResource($data);
+        return "creado";
         // return WooOrder::with("customer", "products")->get();
     }
 
