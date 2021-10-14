@@ -4,89 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
-function find($array, $func)
-{
-    foreach ($array as $item) {
-        if ($func($item)) {
-            return $item;
-        }
-    }
-
-    return null;
-}
-
-class OrderResource extends JsonResource
-{
-    public function toArray($request)
-    {
-        $result = [
-            'id' => $this->id,
-            'status' => $this->status,
-
-            'discount_total' => $this->discount_total,
-            'discount_tax' => $this->discount_tax,
-            'shipping_total' => $this->shipping_total,
-            'shipping_tax' => $this->shipping_tax,
-            'cart_tax' => $this->cart_tax,
-            'total' => $this->total,
-            'total_tax' => $this->total_tax,
-            'currency_symbol' =>  $this->currency_symbol,
-
-            'shipping' => $this->shipping,
-
-            'date_completed' => $this->date_completed,
-            'date_paid' => $this->date_paid,
-
-            'payment_method_title' => $this->payment_method_title,
-            'payment_method' => $this->payment_method,
-
-            // 'payment_method_title' => $this->payment_method_title,
-            // 'payment_method_title' => $this->payment_method_title,
-            // 'products' => $this->line_items,
-            'products' => OrderProductResource::collection($this->line_items),
-        ];
-
-        $result["shipping"]->ci = find($this->meta_data, function ($item) {
-            return $item->key === '_billing_ci';
-        })?->value;
-
-        $result["payment_reference"] = find($this->meta_data, function ($item) {
-            return $item->key === 'woocommerce_customized_payment_data';
-        })?->value?->data;
-
-        return $result;
-    }
-}
-
-class OrderProductResource extends JsonResource
-{
-    public function toArray($request)
-    {
-        $result = [
-            'id' => $this->id,
-            'name' => $this->name,
-            'quantity' => $this->quantity,
-            'sku' => $this->sku,
-            'price' => $this->price,
-
-            'subtotal' => $this->subtotal,
-            'subtotal_tax' => $this->subtotal_tax,
-            'total' => $this->total,
-            'total_tax' => $this->total_tax,
-            "taxes" => $this->taxes,
-        ];
-
-        $result["location"] = find($this->meta_data, function ($item) {
-            return $item->key === 'Location';
-        })?->value;
-
-        return $result;
-    }
-}
+use Illuminate\Support\Facades\Http;
+use App\Http\Resources\OrderResource;
 
 class OrderController extends Controller
 {
@@ -105,12 +25,12 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        Log::error("*______________________________desde la consola ________________________________________________________________*/");
+        Log::error("*______________________________Orden de compra iniciadas_____________________________________________*/");
         $data = $request->all();
 
         // Ignorar las ordenes que no estén completadas
         if ($data["status"] != "completed") {
-            error_log("La orden no está completada");
+            Log::debug("La orden no está completada");
             return;
         }
 
@@ -124,12 +44,15 @@ class OrderController extends Controller
             return;
         }
 
+        $data = json_decode(json_encode($data));
         // Crear la orden nueva
         $orden = new Order();
         $orden->order_id = $idOrden;
+        $orden->original_resource = $data;
+        $orden->processed_resource = new OrderResource($data);
         $orden->save();
 
-        error_log("!Orden registrada con exito!");
+        Log::debug("!Orden registrada con exito!");
 
         // DB::connection("mysql")->insert('insert into data ( data) values (?)', [json_encode(["data" => $request->all()])]);
         return "ok";
