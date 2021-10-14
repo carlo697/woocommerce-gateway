@@ -3,21 +3,108 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\WooOrder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Auth\Access\AuthorizationException;
+
+function find($array, $func)
+{
+    foreach ($array as $item) {
+        if ($func($item)) {
+            return $item;
+        }
+    }
+
+    return null;
+}
+
+class OrderResource extends JsonResource
+{
+    public function toArray($request)
+    {
+        $result = [
+            'id' => $this->id,
+            'status' => $this->status,
+
+            'discount_total' => $this->discount_total,
+            'discount_tax' => $this->discount_tax,
+            'shipping_total' => $this->shipping_total,
+            'shipping_tax' => $this->shipping_tax,
+            'cart_tax' => $this->cart_tax,
+            'total' => $this->total,
+            'total_tax' => $this->total_tax,
+            'currency_symbol' =>  $this->currency_symbol,
+
+            'shipping' => $this->shipping,
+
+            'date_completed' => $this->date_completed,
+            'date_paid' => $this->date_paid,
+
+            'payment_method_title' => $this->payment_method_title,
+            'payment_method' => $this->payment_method,
+            
+            // 'payment_method_title' => $this->payment_method_title,
+            // 'payment_method_title' => $this->payment_method_title,
+            // 'products' => $this->line_items,
+            'products' => OrderProductResource::collection($this->line_items),
+        ];
+
+        $result["shipping"]->ci = find($this->meta_data, function ($item)  {
+            return $item->key === '_billing_ci';
+        })?->value;
+
+        $result["payment_reference"] = find($this->meta_data, function ($item)  {
+            return $item->key === 'woocommerce_customized_payment_data';
+        })?->value?->data;
+
+        return $result;
+    }
+}
+
+class OrderProductResource extends JsonResource
+{
+    public function toArray($request)
+    {
+        $result = [
+            'id' => $this->id,
+            'name' => $this->name,
+            'quantity' => $this->quantity,
+            'sku' => $this->sku,
+            'price' => $this->price,
+            
+            'subtotal' => $this->subtotal,
+            'subtotal_tax' => $this->subtotal_tax,
+            'total' => $this->total,
+            'total_tax' => $this->total_tax,
+            "taxes" => $this->taxes,
+        ];
+
+        $result["location"] = find($this->meta_data, function ($item)  {
+            return $item->key === 'Location';
+        })?->value;
+
+        return $result;
+    }
+}
 
 class OrderController extends Controller
 {
     public function index()
     {
-        return WooOrder::with("customer", "products")->get();
+        $response = Http::get('https://redvital.com/dev1/wp-json/wc/v3/orders/35483', [
+            'consumer_key' => 'ck_fd6c1a59e0aa18902ff0aa3739b928285954f846',
+            'consumer_secret' => 'cs_a345f84f9e90c71feeaca7aa2b443060bb57f3d0',
+        ]);
+
+        $data = json_decode($response);
+        // return $data;
+        return new OrderResource($data);
+        // return WooOrder::with("customer", "products")->get();
     }
 
     public function store(Request $request)
     {
-
         Log::error("*______________________________desde la consola ________________________________________________________________*/");
         $data = $request->all();
 

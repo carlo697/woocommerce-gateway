@@ -3,23 +3,23 @@
 namespace App\Models;
 
 use App\Models\WooOrder;
-use App\Models\WooOrderItemMeta;
+use App\Models\WooOrderProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class WooOrderProduct extends Model
+class WooOrderItemMeta extends Model
 {
     use HasFactory;
     protected $connection = 'woocommerce';
-    protected $table = 'wp_wc_order_product_lookup';
+    protected $table = 'wplp_woocommerce_order_itemmeta';
 
     public function order()
     {
         return $this->belongsTo(WooOrder::class, 'order_id', 'order_id');
     }
 
-    public function metas()
+    public function orderProduct()
     {
-        return $this->hasMany(WooOrderItemMeta::class, 'order_item_id', 'order_item_id');
+        return $this->belongsTo(WooOrderProduct::class, 'order_item_id', 'order_item_id');
     }
 }

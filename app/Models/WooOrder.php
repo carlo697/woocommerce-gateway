@@ -17,6 +17,7 @@ class WooOrder extends Model
     {
         return $this->hasMany(WooOrderProduct::class, 'order_id', 'order_id');
     }
+    
     public function customer()
     {
         return $this->belongsTo(WooCustomer::class, 'customer_id', 'customer_id');

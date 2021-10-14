@@ -18,6 +18,8 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger("order_id");
             $table->boolean("is_processed")->default(false);
             $table->boolean("returned_error")->default(false);
+            $table->json("original_resource");
+            $table->json("processed_resource");
             $table->timestamps();
         });
     }
