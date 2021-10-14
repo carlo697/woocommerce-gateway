@@ -43,18 +43,18 @@ class OrderResource extends JsonResource
 
             'payment_method_title' => $this->payment_method_title,
             'payment_method' => $this->payment_method,
-            
+
             // 'payment_method_title' => $this->payment_method_title,
             // 'payment_method_title' => $this->payment_method_title,
             // 'products' => $this->line_items,
             'products' => OrderProductResource::collection($this->line_items),
         ];
 
-        $result["shipping"]->ci = find($this->meta_data, function ($item)  {
+        $result["shipping"]->ci = find($this->meta_data, function ($item) {
             return $item->key === '_billing_ci';
         })?->value;
 
-        $result["payment_reference"] = find($this->meta_data, function ($item)  {
+        $result["payment_reference"] = find($this->meta_data, function ($item) {
             return $item->key === 'woocommerce_customized_payment_data';
         })?->value?->data;
 
@@ -72,7 +72,7 @@ class OrderProductResource extends JsonResource
             'quantity' => $this->quantity,
             'sku' => $this->sku,
             'price' => $this->price,
-            
+
             'subtotal' => $this->subtotal,
             'subtotal_tax' => $this->subtotal_tax,
             'total' => $this->total,
@@ -80,7 +80,7 @@ class OrderProductResource extends JsonResource
             "taxes" => $this->taxes,
         ];
 
-        $result["location"] = find($this->meta_data, function ($item)  {
+        $result["location"] = find($this->meta_data, function ($item) {
             return $item->key === 'Location';
         })?->value;
 
