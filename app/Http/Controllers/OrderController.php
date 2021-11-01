@@ -12,22 +12,18 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $response = Http::get('https://redvital.com/dev1/wp-json/wc/v3/orders/35483', [
+        $response = Http::get('https://redvital.com/dev1/wp-json/wc/v3/orders/35490', [
             'consumer_key' => 'ck_fd6c1a59e0aa18902ff0aa3739b928285954f846',
             'consumer_secret' => 'cs_a345f84f9e90c71feeaca7aa2b443060bb57f3d0',
         ]);
-
-        return $data = json_decode($response);
-        // return $data;
         
-        return new OrderResource($data);
-        return "creado";
-        // return WooOrder::with("customer", "products")->get();
+        return new OrderResource(json_decode($response));
     }
 
     public function store(Request $request)
     {
-        Log::error("*______________________________Orden de compra iniciadas_____________________________________________*/");
+        Log::debug("__Orden de compra editada__");
+        
         $data = $request->all();
 
         // Ignorar las ordenes que no estén completadas
@@ -38,34 +34,50 @@ class OrderController extends Controller
 
         // Obtener la id de la orden
         $idOrden = $data["id"];
-
         // Ignorar si ya se registro la orden anteriormente
         $ordenEncontrada = Order::where("order_id", $idOrden)->first();
         if ($ordenEncontrada) {
-            error_log("La orden ya se encuentra registrada");
+            Log::debug("La orden ya se encuentra registrada");
             return;
         }
 
-        $data = json_decode(json_encode($data));
+        $data = json_encode($data);
+        
+        Log::debug($data);
+        
         // Crear la orden nueva
         $orden = new Order();
         $orden->order_id = $idOrden;
         $orden->original_resource = $data;
-        $orden->processed_resource = new OrderResource($data);
+        $orden->processed_resource = new OrderResource(json_decode($data));
         $orden->save();
 
-        Log::debug("!Orden registrada con exito!");
+        Log::debug("!Nueva orden registrada con exito!");
 
-        // DB::connection("mysql")->insert('insert into data ( data) values (?)', [json_encode(["data" => $request->all()])]);
         return "ok";
     }
 
+    public function update(Request $request, Order $orden)
+    {
+        $request->is_invoiced = $orden->is_invoiced;
+        $request->invoice_number = $orden->invoice_number;
+        $orden->save();
+        return $this->showOne($orden);
+        
+    }
     public function fake_store(Request $request)
     {
         Log::error("Procesada orden en el inventario!!!");
+        Log::debug($request->header('Authorization'));
+        Log::error($request->data);
 
         // throw new AuthorizationException("hola");
         Log::error("Devolver respuesta!!");
         return "ok";
+    }
+    
+    public function show(Order $order)
+    {
+        return ["data" => $order->processed_resource];
     }
 }

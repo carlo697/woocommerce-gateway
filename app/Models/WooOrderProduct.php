@@ -11,7 +11,7 @@ class WooOrderProduct extends Model
 {
     use HasFactory;
     protected $connection = 'woocommerce';
-    protected $table = 'wp_wc_order_product_lookup';
+    protected $table = 'wplp_wc_order_product_lookup';
 
     public function order()
     {
