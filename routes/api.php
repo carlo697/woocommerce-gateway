@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post("/orders", [OrderController::class, 'store']);
+Route::post("/orders/{id}", [OrderController::class, 'update']);
 Route::get("/woo_orders", [OrderController::class, 'index']);
 Route::post("/fake_orders", [OrderController::class, 'fake_store']);

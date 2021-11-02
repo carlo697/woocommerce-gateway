@@ -60,6 +60,11 @@ class OrderController extends Controller
         return "ok";
     }
 
+
+    public function update(){
+        
+    }
+
     public function fake_store(Request $request)
     {
         Log::error("Procesada orden en el inventario!!!");

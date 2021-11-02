@@ -13,6 +13,16 @@ class OrderResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+    public function find($array, $func)
+    {
+        foreach ($array as $item) {
+            if ($func($item)) {
+                return $item;
+            }
+        }
+    
+        return null;
+    }
     public function toArray($request)
     {
 

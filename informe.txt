@@ -1,0 +1,152 @@
+proceso para actualizar woocommerce
+recibir datos desde sistema en un formato json : 
+
+[
+    {
+        "sku": 123,
+        "name" : "producto1, 
+        "sale_price" : 11,
+        "regualr_price" : 12,
+        "location" : {
+            "1" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+            "2" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+        }
+    },
+    {
+        "sku": 123,
+        "name" : "producto1,
+        "sale_price" : 11,
+        "regualr_price" : 12,
+        "location" : {
+            "1" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+            "2" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+        }
+    },
+    {
+        "sku": 123,
+        "name" : "producto1,
+        "sale_price" : 11,
+        "regualr_price" : 12,
+        "location" : {
+            "1" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+            "2" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+        }
+    },
+    {
+        "sku": 123,
+        "name" : "producto1,
+        "sale_price" : 11,
+        "regualr_price" : 12,
+        "location" : {
+            "1" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+            "2" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+        }
+    },
+    {
+        "sku": 123,
+        "name" : "producto1,
+        "sale_price" : 11,
+        "regualr_price" : 12,
+        "location" : {
+            "1" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+            "2" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+        }
+    },
+    {
+        "sku": 123,
+        "name" : "producto1,
+        name: "test"
+        "sale_price" : 11,
+        "regualr_price" : 12,
+        "location" : {
+            "1" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+            "2" : {
+                "stock" : 5,
+                "sale_price" : 12,
+                "regular_price" : 13
+            } ,
+        }
+    },
+],
+
+1- la informacion se envia a una ruta en el sistema(POST),cuando la información se reciba se va a iterar y validar si el producto 
+ya esta registrado en el sistema en el caso que este registrado se actualiza la informacion sino esta registrado se crea el producto. 
+
+
+id
+data
+
+ 
+
+
+modelo de producto
+sku
+sale_price
+regular_price
+
+
+
+product_store
+id
+sku**fk**
+id_location
+stock
+sale_price
+regular_price
+isDirty
+isSynchronized(bool)
+
+
+
+
+modelo de store
+
+    id
+    name
+
+
+
