@@ -9,7 +9,11 @@ class Product extends Model
 {
     use HasFactory;
     protected $table = 'products';
+
+
     protected $primaryKey = 'sku';
     public $incrementing = false;
     protected $keyType = 'string';
+
+    
 }

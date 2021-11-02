@@ -8,14 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
-{
-
-
-
-
-
-
-    
+{    
     public $locations_id = [
         "Barquisimeto" => 4075,
         "Kervis_pruebas" => 4085,

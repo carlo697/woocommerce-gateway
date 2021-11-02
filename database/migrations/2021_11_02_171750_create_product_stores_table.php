@@ -15,6 +15,13 @@ class CreateProductStoresTable extends Migration
     {
         Schema::create('product_stores', function (Blueprint $table) {
             $table->id();
+            $table->string('sku');
+            $table->foreign('sku')->references('sku')->on('products')->onDelete('cascade');
+            $table->foreignId('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->string("sale_price")->nullable();
+            $table->string("regular_price")->nullable();
+            $table->enum('status', ['to_process', 'failed', 'success'])->default('to_process');
+            $table->text('error')->nullable();
             $table->timestamps();
         });
     }

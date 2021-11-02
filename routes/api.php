@@ -21,7 +21,7 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
 });
 
 // API
-Route::middleware('redvital')->group(function () {
+// Route::middleware('redvital')->group(function () {
     // orden de compras
     Route::get("/orders/{order}", [OrderController::class, 'show']);
     Route::post("/orders", [OrderController::class, 'store']);
@@ -35,7 +35,8 @@ Route::middleware('redvital')->group(function () {
     // ordenes productos woocommerce
     Route::get("/woo_orders", [OrderController::class, 'index']);
 
-});
+
+// });
 
 // Pruebas
 
