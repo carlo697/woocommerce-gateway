@@ -123,6 +123,8 @@ name
 sale_price
 regular_price
 
+
+
 product_store
 id
 sku**fk**
