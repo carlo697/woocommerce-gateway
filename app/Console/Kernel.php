@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\Gateway;
+use App\Console\Commands\ProcessingProduct;
 use App\Models\Order;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -18,7 +19,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Gateway::class
+        Gateway::class,
+        ProcessingProduct::class,
+
     ];
 
     /**

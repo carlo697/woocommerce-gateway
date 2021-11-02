@@ -95,7 +95,6 @@ recibir datos desde sistema en un formato json :
     {
         "sku": 123,
         "name" : "producto1,
-        name: "test"
         "sale_price" : 11,
         "regualr_price" : 12,
         "location" : {
@@ -117,18 +116,12 @@ recibir datos desde sistema en un formato json :
 ya esta registrado en el sistema en el caso que este registrado se actualiza la informacion sino esta registrado se crea el producto. 
 
 
-id
-data
-
- 
-
 
 modelo de producto
 sku
+name
 sale_price
 regular_price
-
-
 
 product_store
 id
@@ -137,16 +130,14 @@ id_location
 stock
 sale_price
 regular_price
-isDirty
-isSynchronized(bool)
-
+status(por_procesar, failed, success)(defauld por_procesar)
+error(string)nullable
 
 
 
 modelo de store
-
-    id
-    name
+id
+name
 
 
 

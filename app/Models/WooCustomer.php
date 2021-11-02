@@ -9,5 +9,5 @@ class WooCustomer extends Model
 {
     use HasFactory;
     protected  $connection = 'woocommerce';
-    protected $table = 'wp_wc_customer_lookup';
+    protected $table = 'wplp_wc_order_stats';
 }

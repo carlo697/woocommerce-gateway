@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use function App\Util\find;
+use function App\Utils\Find;
 
 class OrderProductResource extends JsonResource
 {
@@ -14,6 +14,16 @@ class OrderProductResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+       public function find($array, $func)
+    {
+        foreach ($array as $item) {
+            if ($func($item)) {
+                return $item;
+            }
+        }
+    
+        return null;
+    }
     public function toArray($request)
     {
         $result = [
@@ -30,7 +40,7 @@ class OrderProductResource extends JsonResource
             "taxes" => $this->taxes,
         ];
 
-        $result["location"] = find($this->meta_data, function ($item) {
+        $result["location"] = $this->find($this->meta_data, function ($item) {
             return $item->key === 'Location';
         })?->value;
 

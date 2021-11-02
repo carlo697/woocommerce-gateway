@@ -29,6 +29,7 @@ class Gateway extends Command
      *
      * @return void
      */
+     
     public function __construct()
     {
         parent::__construct();
@@ -41,15 +42,19 @@ class Gateway extends Command
      */
     public function handle()
     {
+        
         $ordenes = Order::where("is_processed", false)->get();
             
 
             foreach ($ordenes as $orden) {
                 // Intentar informar al inventario de la compra que se hizo en el e-commerce
                 // EL catch se ejecutara en caso de que se supere el timeout
+                Log::debug("holaaa");
                 try {
-                    $response = Http::timeout(30)->post('https://gateway.redvital.com/public/api/fake_orders', [
-                        'data' => 'example',
+                    $response = Http::withHeaders([
+                            'Authorization' => env('KEY_SECRET_INVENTARIO')
+                        ])->timeout(30)->post('https://gateway.redvital.com/public/api/fake_orders', [
+                        'data' => $orden->processed_resource,
                     ]);
 
                     Log::debug("Respuesta: {$response->status()}");

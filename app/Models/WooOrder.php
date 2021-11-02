@@ -11,7 +11,7 @@ class WooOrder extends Model
 {
     use HasFactory;
     protected $connection = 'woocommerce';
-    protected $table = 'wp_wc_order_stats';
+    protected $table = 'wplp_wc_order_stats';
 
     public function products()
     {

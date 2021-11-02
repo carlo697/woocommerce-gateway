@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use function App\Util\find;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -13,6 +13,8 @@ class OrderResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+     
+    
     public function find($array, $func)
     {
         foreach ($array as $item) {
@@ -29,6 +31,8 @@ class OrderResource extends JsonResource
         $result = [
             'id' => $this->id,
             'status' => $this->status,
+            
+            'products' => OrderProductResource::collection($this->line_items),
 
             'discount_total' => $this->discount_total,
             'discount_tax' => $this->discount_tax,
@@ -37,29 +41,48 @@ class OrderResource extends JsonResource
             'cart_tax' => $this->cart_tax,
             'total' => $this->total,
             'total_tax' => $this->total_tax,
-            'currency_symbol' => $this->currency_symbol,
 
-            'shipping' => $this->shipping,
+            'billing' => $this->billing,
 
             'date_completed' => $this->date_completed,
-            'date_paid' => $this->date_paid,
-
-            'payment_method_title' => $this->payment_method_title,
-            'payment_method' => $this->payment_method,
-
-            // 'payment_method_title' => $this->payment_method_title,
-            // 'payment_method_title' => $this->payment_method_title,
-            // 'products' => $this->line_items,
-            'products' => OrderProductResource::collection($this->line_items),
+            'date_paid' => $this->date_paid
         ];
 
-        $result["shipping"]->ci = find($this->meta_data, function ($item) {
+        $result["billing"]->ci = $this->find($this->meta_data, function ($item) {
             return $item->key === '_billing_ci';
         })?->value;
+        
+        $result["currency"] = $this->currency;
+        $result["currency_symbol"] = $this->currency_symbol;
 
-        $result["payment_reference"] = find($this->meta_data, function ($item) {
+        $paymentReference = $this->find($this->meta_data, function ($item) {
             return $item->key === 'woocommerce_customized_payment_data';
         })?->value?->data;
+        
+        if ($paymentReference) {
+            $pago = [];
+            
+            if ($this->payment_method_title === "Transferencia bancaria") {
+                $pago["method"] = "transferencia";
+                $pago["bank"] = $paymentReference[0]->{"Bancos"};
+                $pago["reference"] = $paymentReference[1]->{"Numero referencia"};
+                $pago["total"] = $paymentReference[2]->{"Monto"};
+            } else if ($this->payment_method_title === "Pago Móvil") {
+                $pago["method"] = "pago_movil";
+                $pago["reference"] = $paymentReference[0]->{"Numero referencia"};
+                $pago["total"] = $paymentReference[1]->{"Monto"};
+            } else if ($this->payment_method_title === "Zelle") {
+                $pago["method"] = "zelle";
+                $pago["reference"] = $paymentReference[0]->{"Numero referencia"};
+                $pago["holder_name"] = $paymentReference[1]->{"Nombre del Titular"};
+                $pago["total"] = $paymentReference[2]->{"Monto"};
+            } else {
+                $pago["method"] = "unknown";
+                $pago["data"] = $paymentReference;
+            }
+            
+            $result["payment_info"] = $pago;
+        }
 
         return $result;
     }

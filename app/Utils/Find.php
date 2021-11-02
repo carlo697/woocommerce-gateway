@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Util;
+namespace App\Utils;
 
-function find($array, $func)
+function Find($array, $func)
 {
     foreach ($array as $item) {
         if ($func($item)) {
