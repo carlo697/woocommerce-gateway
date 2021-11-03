@@ -27,6 +27,12 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
     Route::post("/orders", [OrderController::class, 'store']);
     Route::post("/orders/{id}", [OrderController::class, 'update']);
 
+
+
+
+    // Productos 
+    Route::post("/products/lista", [ProductController::class, 'listProduct']);
+
 // prueba
     Route::get("/prueba", [OrderController::class, 'prueba']);
     Route::get("/llamando", [OrderController::class, 'llamando']);
