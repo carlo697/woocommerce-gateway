@@ -33,10 +33,10 @@ class FileProductController extends Controller
         $data = $request->data;
         $dataString = json_encode($data);
         $fileName = Str::uuid() . "-productos.txt";
-        Storage::disk('local')->put($fileName, $dataString);
-        $url = Storage::url($fileName);
+        $file = Storage::disk('local')->put($fileName, $dataString);
+
         $file = [
-            "file" => $url,
+            "file" => $fileName,
             "status" => "pending",
         ];
         $fileProduct = FileProduct::create($file);

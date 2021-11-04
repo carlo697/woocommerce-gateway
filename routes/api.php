@@ -37,8 +37,7 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
 // prueba
     Route::get("/prueba", [OrderController::class, 'prueba']);
     Route::get("/llamando", [OrderController::class, 'llamando']);
-    // actualizacion de productos
-    Route::post("/products/{id}", [ProductController::class, 'update']);
+    
     // ordenes productos woocommerce
     Route::get("/woo-orders", [OrderController::class, 'index']);
 
@@ -47,6 +46,11 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
     Route::get("/file-products", [FileProductController::class, 'index']);
     Route::post("/file-products", [FileProductController::class, 'store']);
     Route::get("/file-products/{fileProduct}", [FileProductController::class, 'show']);
+    
+
+    // actualizacion de productos
+    Route::get("/products", [ProductController::class, 'index']);
+    Route::post("/products", [ProductController::class, 'store']);
     
 
 

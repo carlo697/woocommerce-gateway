@@ -2,14 +2,15 @@
 
 namespace App\Console;
 
-use App\Console\Commands\Gateway;
-use App\Console\Commands\ProcessingProduct;
 use App\Models\Order;
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Http;
+use App\Jobs\ProductsFileJob;
+use App\Console\Commands\Gateway;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use App\Console\Commands\ProcessingProduct;
+use Illuminate\Console\Scheduling\Schedule;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
@@ -35,9 +36,15 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // $schedule->call(function () {
 
-
+        
         // })->everyMinute()->name("someName")->withoutOverlapping();
-        $schedule->command('gateway:start')->everyMinute()->name("someName")->withoutOverlapping();
+        // $schedule->command('gateway:start')->everyMinute()->name("someName")->withoutOverlapping();
+        // $schedule->job(new ProductsFileJob)->everyMinute();
+        //
+        $schedule->call(function () {
+            ProductsFileJob::dispatch();
+        })->name("test")->withoutOverlapping();
+        
     }
 
     /**
