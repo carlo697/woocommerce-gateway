@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\FileProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +40,14 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
     // actualizacion de productos
     Route::post("/products/{id}", [ProductController::class, 'update']);
     // ordenes productos woocommerce
-    Route::get("/woo_orders", [OrderController::class, 'index']);
+    Route::get("/woo-orders", [OrderController::class, 'index']);
+
+
+    // File Products
+    Route::get("/file-products", [FileProductController::class, 'index']);
+    Route::post("/file-products", [FileProductController::class, 'store']);
+    Route::get("/file-products/{file}", [FileProductController::class, 'show']);
+    
 
 
 // });

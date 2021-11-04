@@ -13,10 +13,10 @@ class CreateFileProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('file_product', function (Blueprint $table) {
+        Schema::create('file_products', function (Blueprint $table) {
             $table->id();
             $table->string('file');
-            $table->enum('status',['pending', 'processing', 'done']);
+            $table->enum('status',['pending', 'processing', 'done'])->default('pending');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateFileProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('file_product');
+        Schema::dropIfExists('file_products');
     }
 }

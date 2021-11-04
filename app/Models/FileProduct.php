@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FileProduct extends Model
 {
     use HasFactory;
-    protected $tables = "file_product"; 
+    protected $tables = "file_products"; 
+    protected $fillable = ['file', 'status' ];
     
 }
