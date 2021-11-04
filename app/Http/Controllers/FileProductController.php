@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Http\Resources\FileProductsResource;
 use App\Models\FileProduct;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class FileProductController extends Controller
 {
 
     private $validation_rules = [
         'data' => 'required',
-        
+
     ];
     public function index()
     {
-        return "hola desde index";
+        return FileProduct::all();
     }
 
     public function store(Request $request)
@@ -33,19 +32,21 @@ class FileProductController extends Controller
 
         $data = $request->data;
         $dataString = json_encode($data);
-        $fileProduct = new FileProduct();
-        $fileName = Str::uuid()."-productos.txt";
+        $fileName = Str::uuid() . "-productos.txt";
         Storage::disk('local')->put($fileName, $dataString);
-        $url =  Storage::url($fileName);
-        $fileProduct->file = $url;
-        $fileProduct->save();
-        return $this->showOne($fileProduct,201);
+        $url = Storage::url($fileName);
+        $file = [
+            "file" => $url,
+            "status" => "pending",
+        ];
+        $fileProduct = FileProduct::create($file);
+        return new FileProductsResource($fileProduct);
 
     }
 
-    public function show()
+    public function show(FileProduct $fileProduct)
     {
 
-        return "show";
+        return $this->showOne($fileProduct);
     }
 }

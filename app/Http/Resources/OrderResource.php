@@ -31,9 +31,7 @@ class OrderResource extends JsonResource
         $result = [
             'id' => $this->id,
             'status' => $this->status,
-            
             'products' => OrderProductResource::collection($this->line_items),
-
             'discount_total' => $this->discount_total,
             'discount_tax' => $this->discount_tax,
             'shipping_total' => $this->shipping_total,
@@ -41,9 +39,7 @@ class OrderResource extends JsonResource
             'cart_tax' => $this->cart_tax,
             'total' => $this->total,
             'total_tax' => $this->total_tax,
-
             'billing' => $this->billing,
-
             'date_completed' => $this->date_completed,
             'date_paid' => $this->date_paid
         ];

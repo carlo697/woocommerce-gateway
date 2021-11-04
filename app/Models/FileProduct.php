@@ -10,5 +10,6 @@ class FileProduct extends Model
     use HasFactory;
     protected $tables = "file_products"; 
     protected $fillable = ['file', 'status' ];
+    protected $casts = ["status" => "string"];
     
 }

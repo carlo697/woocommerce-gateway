@@ -46,7 +46,7 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
     // File Products
     Route::get("/file-products", [FileProductController::class, 'index']);
     Route::post("/file-products", [FileProductController::class, 'store']);
-    Route::get("/file-products/{file}", [FileProductController::class, 'show']);
+    Route::get("/file-products/{fileProduct}", [FileProductController::class, 'show']);
     
 
 
