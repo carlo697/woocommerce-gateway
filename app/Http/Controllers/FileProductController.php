@@ -32,13 +32,13 @@ class FileProductController extends Controller
         $data = collect($request->data);
         $sizeObjet = sizeof($data);
 
-        $m = [];
+        
         $objetos = collect([]);
         $chunkSize = 5000;
 
         for ($i = 0; $i < $sizeObjet; $i += $chunkSize) {
-            array_push($m, $data->splice(0, $chunkSize));
-            $dataString = json_encode($data);
+            $content = $data->splice(0, $chunkSize);
+            $dataString = json_encode($content);
             $fileName = Str::uuid() . "-productos.txt";
             $file = Storage::disk('local')->put($fileName, $dataString);
 
