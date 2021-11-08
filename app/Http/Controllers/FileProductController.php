@@ -29,18 +29,30 @@ class FileProductController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
         }
+        $data = collect($request->data);
+        $sizeObjet = sizeof($data);
 
-        $data = $request->data;
-        $dataString = json_encode($data);
-        $fileName = Str::uuid() . "-productos.txt";
-        $file = Storage::disk('local')->put($fileName, $dataString);
+        $m = [];
+        $objetos = collect([]);
+        $chunkSize = 5000;
 
-        $file = [
-            "file" => $fileName,
-            "status" => "pending",
-        ];
-        $fileProduct = FileProduct::create($file);
-        return new FileProductsResource($fileProduct);
+        for ($i = 0; $i < $sizeObjet; $i += $chunkSize) {
+            array_push($m, $data->splice(0, $chunkSize));
+            $dataString = json_encode($data);
+            $fileName = Str::uuid() . "-productos.txt";
+            $file = Storage::disk('local')->put($fileName, $dataString);
+
+            $file = [
+                "file" => $fileName,
+                "status" => "pending",
+            ];
+            $fileProduct = FileProduct::create($file);
+            $objetoCreado = new FileProductsResource($fileProduct);
+
+            $objetos->add($objetoCreado);
+        }
+
+        return $this->showAll($objetos);
 
     }
 

@@ -6,7 +6,7 @@ recibir datos desde sistema en un formato json :
         "sku": 123,
         "name" : "producto1, 
         "sale_price" : 11,
-        "regualr_price" : 12,
+        "regualar_price" : 12,
         "location" : {
             "1" : {
                 "stock" : 5,
