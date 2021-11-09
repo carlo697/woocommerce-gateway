@@ -2,18 +2,18 @@
 
 namespace App\Jobs;
 
-use App\Models\Product;
 use App\Models\FileProduct;
+use App\Models\Product;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductsFileJob implements ShouldQueue
 {
@@ -83,11 +83,10 @@ class ProductsFileJob implements ShouldQueue
             ];
             $resultado = Product::where('sku', $producto['sku'])->first();
             $diff = $timeInit->diffInSeconds(Carbon::now());
-             
+
             if (!$resultado) {
                 $newProduct = Product::create($productInfo);
-                error_log("no se a encontrado sku se creara " . $producto['sku']. " segundos transcurrido ". $diff);
-                
+                error_log("no se a encontrado sku se creara " . $producto['sku'] . " segundos transcurrido " . $diff);
                 continue;
             }
             $resultado->update($productInfo);

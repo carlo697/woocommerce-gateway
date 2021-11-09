@@ -19,7 +19,7 @@ class FileProductController extends Controller
     ];
     public function index()
     {
-        return FileProduct::all();
+        return $this->showAll(FileProduct::all());
     }
 
     public function store(Request $request)

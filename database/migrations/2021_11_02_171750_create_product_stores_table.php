@@ -17,6 +17,7 @@ class CreateProductStoresTable extends Migration
             $table->id();
             $table->string('sku');
             $table->foreignId('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->string("stock")->nullable();
             $table->string("sale_price")->nullable();
             $table->string("regular_price")->nullable();
             $table->enum('status', ['to_process', 'failed', 'success'])->default('to_process');

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FileProductController;
+use App\Http\Controllers\ProductStoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,6 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
     Route::post("/orders", [OrderController::class, 'store']);
     Route::post("/orders/{id}", [OrderController::class, 'update']);
 
-
-
-
     // Productos 
     Route::post("/products/lista", [ProductController::class, 'listProduct']);
 
@@ -50,7 +48,8 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
 
     // actualizacion de productos
     Route::get("/products", [ProductController::class, 'index']);
-    Route::post("/products", [ProductController::class, 'store']);
+    Route::post("/products/{sku}", [ProductController::class, 'update']);
+    Route::get("/products/{sku}", [ProductController::class, 'show']);
     
 
 

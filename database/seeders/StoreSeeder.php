@@ -26,5 +26,10 @@ class StoreSeeder extends Seeder
             'wc_id' => "2",
             'created_at' => Carbon::now()
         ]);
+        DB::table('stores')->insert([
+            'name' => 'lara',
+            'wc_id' => "3",
+            'created_at' => Carbon::now()
+        ]);
     }
 }

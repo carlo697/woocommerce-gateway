@@ -10,7 +10,9 @@ class ProductStoreController extends Controller
 
     public function store(){}
 
-    public function update(){}
+    public function update(Request $request, ProductStoreController $sku){
+        return "hola desde update";
+    }
 
     public function delete(){}
 }
