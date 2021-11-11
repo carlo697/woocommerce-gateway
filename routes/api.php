@@ -47,7 +47,7 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
     
 
     // actualizacion de productos
-    Route::get("/products", [ProductController::class, 'index']);
+    Route::get("/products", [ProductController::class, 'actualizar_woo']);
     Route::post("/products/{sku}", [ProductController::class, 'update']);
     Route::get("/products/{sku}", [ProductController::class, 'show']);
     

@@ -20,7 +20,6 @@ class CreateProductStoresTable extends Migration
             $table->string("stock")->nullable();
             $table->string("sale_price")->nullable();
             $table->string("regular_price")->nullable();
-            $table->enum('status', ['to_process', 'failed', 'success'])->default('to_process');
             $table->text('error')->nullable();
             $table->timestamps();
             $table->foreign('sku')->references('sku')->on('products')->onDelete('cascade');

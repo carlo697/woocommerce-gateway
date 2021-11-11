@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Models\Order;
 use App\Jobs\ProductsFileJob;
 use App\Console\Commands\Gateway;
+use App\Jobs\ProductoWoocommerce;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Console\Commands\ProcessingProduct;
@@ -43,7 +44,10 @@ class Kernel extends ConsoleKernel
         //
         $schedule->call(function () {
             ProductsFileJob::dispatch();
-        })->name("test")->withoutOverlapping();
+        })->name("Product File")->withoutOverlapping();
+        $schedule->call(function () {
+            ProductoWoocommerce::dispatch();
+        })->name("Product Woocommerce")->withoutOverlapping();
         
     }
 

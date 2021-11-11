@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Models\FileProduct;
 use App\Models\Product;
+use App\Models\ProductStore;
+use App\Models\Store;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -80,22 +82,57 @@ class ProductsFileJob implements ShouldQueue
                 "name" => $producto['name'],
                 "sale_price" => $producto['sale_price'],
                 "regular_price" => $producto['regular_price'],
+                "status" => "to_process"
             ];
             $resultado = Product::where('sku', $producto['sku'])->first();
             $diff = $timeInit->diffInSeconds(Carbon::now());
 
             if (!$resultado) {
-                $newProduct = Product::create($productInfo);
-                error_log("no se a encontrado sku se creara " . $producto['sku'] . " segundos transcurrido " . $diff);
+                Product::create($productInfo);
+                $this->ProductStore($producto);
+
                 continue;
             }
+            error_log("actualizado");
             $resultado->update($productInfo);
-            // error_log("se actualizo producto con sku " . $producto['sku']);
+            $this->ProductStore($producto);
+            error_log("se actualizo producto con sku " . $producto['sku']);
 
         }
 
         return "completado los productos";
 
+    }
+
+    public function ProductStore($producto)
+    {
+
+        if ($producto['location']) {
+            $sizeLocattion = $producto['location'];
+            foreach ($sizeLocattion as $valor => $key) {
+                $productStora = ProductStore::where("sku", $producto['sku'])->Where('store_id', $valor)->first();
+                $store = Store::where('id', $valor)->first();
+                if (!$store) {
+                    continue;
+                }
+                $data = [
+                    "sku" => $producto["sku"],
+                    "store_id" => $valor,
+                    "stock" => $key['stock'],
+                    "regular_price" => $key['regular_price'],
+                    "sale_price" => $key['sale_price'],
+                    
+                ];
+                if (!$productStora) {
+                    ProductStore::create($data);
+                    error_log("creado productStore");
+                    continue;
+                }
+                $productStora->update($data);
+                error_log("actualizado productStore");
+
+            }
+        }
     }
 
 }

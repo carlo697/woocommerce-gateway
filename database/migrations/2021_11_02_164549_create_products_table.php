@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('sale_price');
             $table->string('regular_price');
+            $table->enum('status', ['to_process', 'failed', 'success'])->default('to_process');
             $table->timestamps();
 
         });
