@@ -42,12 +42,13 @@ class Kernel extends ConsoleKernel
         // $schedule->command('gateway:start')->everyMinute()->name("someName")->withoutOverlapping();
         // $schedule->job(new ProductsFileJob)->everyMinute();
         //
-        $schedule->call(function () {
-            ProductsFileJob::dispatch();
-        })->name("Product File")->withoutOverlapping();
+        //  $schedule->call(function () {
+        //     ProductsFileJob::dispatch();
+        // })->name("Product File")->withoutOverlapping();
         $schedule->call(function () {
             ProductoWoocommerce::dispatch();
-        })->name("Product Woocommerce")->withoutOverlapping();
+        })->name("Product Woocommerce")->withoutOverlapping(); 
+        // $schedule->job(new Heartbeat)->everyFiveMinutes();
         
     }
 

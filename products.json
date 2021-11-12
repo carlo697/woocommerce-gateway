@@ -1,0 +1,12 @@
+{
+    "sale_price": "11",
+    "regular_price": "12",
+    "meta_data": [
+        { "key": "wcmlim_stock_at_4073", "value": "5" },
+        { "key": "wcmlim_sale_price_at_4073", "value": "12" },
+        { "key": "wcmlim_regular_price_at_4073", "value": "13" },
+        { "key": "wcmlim_stock_at_4075", "value": "5" },
+        { "key": "wcmlim_sale_price_at_4075", "value": "12" },
+        { "key": "wcmlim_regular_price_at_4075", "value": "13" }
+    ]
+}
