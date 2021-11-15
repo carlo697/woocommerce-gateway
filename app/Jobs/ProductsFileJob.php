@@ -2,20 +2,21 @@
 
 namespace App\Jobs;
 
-use App\Models\FileProduct;
-use App\Models\Product;
-use App\Models\ProductStore;
 use App\Models\Store;
+use App\Models\Product;
+use App\Models\FileProduct;
+use App\Models\ProductStore;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 
 class ProductsFileJob implements ShouldQueue
 {
@@ -35,7 +36,10 @@ class ProductsFileJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     */
+     */public function middleware()
+    {
+        return [(new WithoutOverlapping("ProductsFileJob"))->dontRelease()];
+    }
     public function handle()
     {
         // validar si existe ProductFile sin Procesar
@@ -82,7 +86,7 @@ class ProductsFileJob implements ShouldQueue
                 "name" => $producto['name'],
                 "sale_price" => $producto['sale_price'],
                 "regular_price" => $producto['regular_price'],
-                "status" => "to_process"
+                "status" => "to_process",
             ];
             $resultado = Product::where('sku', $producto['sku'])->first();
             $diff = $timeInit->diffInSeconds(Carbon::now());
@@ -121,7 +125,7 @@ class ProductsFileJob implements ShouldQueue
                     "stock" => $key['stock'],
                     "regular_price" => $key['regular_price'],
                     "sale_price" => $key['sale_price'],
-                    
+
                 ];
                 if (!$productStora) {
                     ProductStore::create($data);

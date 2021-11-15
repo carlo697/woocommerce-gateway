@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 
 class ProductoWoocommerce implements ShouldQueue
 {
@@ -31,8 +32,13 @@ class ProductoWoocommerce implements ShouldQueue
      *
      * @return void
      */
+    public function middleware()
+    {
+        return [(new WithoutOverlapping("ProductoWoocommerce"))->dontRelease()];
+    }
     public function handle()
     {
+
         $productos = Product::where('status', 'to_process')->with('productStore')->limit(20)->get();
 
         // error_log($producto);
@@ -42,12 +48,12 @@ class ProductoWoocommerce implements ShouldQueue
     public function actualizar_woo($productos)
     {
         foreach ($productos as $producto) {
-             $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
-             if (!$resultado) {
-                 $producto->status = 'failed';
-                 $producto->save();
-                 // return $this->errorResponse("No existe un producto con el codigo SKU $producto->sku", Response::HTTP_NOT_FOUND);
-                 return;
+            $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
+            if (!$resultado) {
+                $producto->status = 'failed';
+                $producto->save();
+                // return $this->errorResponse("No existe un producto con el codigo SKU $producto->sku", Response::HTTP_NOT_FOUND);
+                return;
             }
             $id = $resultado->post_id;
 
@@ -80,7 +86,6 @@ class ProductoWoocommerce implements ShouldQueue
                 $data = ["key" => $key, "value" => $value];
                 array_push($respuesta["meta_data"], $data);
 
-               
             }
 
             $response = Http::withHeaders([
