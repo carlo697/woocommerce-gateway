@@ -4,16 +4,16 @@ namespace App\Jobs;
 
 use App\Models\Product;
 use Illuminate\Bus\Queueable;
-use Illuminate\Http\Client\Pool;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Client\Pool;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ProductoWoocommerce implements ShouldQueue
 {
@@ -24,9 +24,10 @@ class ProductoWoocommerce implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    private $id = "";
+    public function __construct($id)
     {
-        //
+        $this->id = $id;
     }
 
     /**
@@ -34,15 +35,18 @@ class ProductoWoocommerce implements ShouldQueue
      *
      * @return void
      */
-    //    public function middleware()
-    //    {
-    //      error_log("ejecutate porfis");
-    //        return [(new WithoutOverlapping("ProductoWoocommerce"))->dontRelease()];
-    //    }
+    public function middleware()
+    {
+
+        return [(new WithoutOverlapping($this->id))];
+    }
     public function handle()
     {
+
         error_log("holaa");
+
         $productos = Product::where('status', 'to_process')->with('productStore')->limit(20)->get();
+
         $divisiones = 5;
         $cantidad = $productos->count();
         error_log($cantidad);
@@ -101,11 +105,12 @@ class ProductoWoocommerce implements ShouldQueue
     public function actualizar_woo($producto)
     {
 
-        // $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
+        $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
 
         $respuesta = [];
-        // $respuesta['id'] = $resultado ? $resultado->post_id : "";
-        $respuesta['id'] = "18114";
+        $respuesta['name'] = $producto->name;
+        $respuesta['id'] = $resultado ? $resultado->post_id : "";
+
         $respuesta['sku'] = $producto->sku;
 
         $respuesta["sale_price"] = strval($producto->sale_price);
