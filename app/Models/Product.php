@@ -12,7 +12,7 @@ class Product extends Model
     protected $primaryKey = 'sku';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['sku','name', 'sale_price','regular_price'];
+    protected $fillable = ['sku','name', 'sale_price','regular_price','status'];
 
     
     public function productStore(){
