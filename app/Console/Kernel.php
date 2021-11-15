@@ -24,9 +24,9 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        /* $schedule->command('inspire')->hourly();
-        $schedule->call(function () {
-        })->everyMinute()->name("someName")->withoutOverlapping(); */
+
+        // $schedule->call(function () {
+        // })->everyMinute()->name("someName")->withoutOverlapping(); 
         // $schedule->command('gateway:start')->everyMinute()->name("someName")->withoutOverlapping();
 
         // $schedule->call(function () {
@@ -35,8 +35,8 @@ class Kernel extends ConsoleKernel
         // $schedule->call(function () {
         //     ProductoWoocommerce::dispatch();
         // })->name("Product Woocommerce");
-        $schedule->job(new ProductoWoocommerce)->everyMinute();
-        $schedule->job(new ProductsFileJob)->everyMinute();
+          $schedule->job(new ProductoWoocommerce)->everyMinute()->withoutOverlapping();
+          $schedule->job(new ProductsFileJob)->everyMinute()->withoutOverlapping();
 
     }
 

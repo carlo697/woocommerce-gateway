@@ -36,10 +36,12 @@ class ProductsFileJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     */public function middleware()
-    {
-        return [(new WithoutOverlapping("ProductsFileJob"))->dontRelease()];
-    }
+     */
+    //   public function middleware()
+    //   {
+    //       error_log("ejecutate porfis");
+    //       return [(new WithoutOverlapping("ProductsFileJob"))->dontRelease()];
+    //   }
     public function handle()
     {
         // validar si existe ProductFile sin Procesar
@@ -76,6 +78,7 @@ class ProductsFileJob implements ShouldQueue
 
             $rule = [
                 "sku" => "required",
+                "name" => "required",
             ];
             $validator = Validator::make($producto, $rule);
             if ($validator->fails()) {

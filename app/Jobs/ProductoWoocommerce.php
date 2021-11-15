@@ -34,10 +34,11 @@ class ProductoWoocommerce implements ShouldQueue
      *
      * @return void
      */
-     public function middleware()
-     {
-         return [(new WithoutOverlapping("ProductoWoocommerce"))->dontRelease()];
-     }
+    //    public function middleware()
+    //    {
+    //      error_log("ejecutate porfis");
+    //        return [(new WithoutOverlapping("ProductoWoocommerce"))->dontRelease()];
+    //    }
     public function handle()
     {
         error_log("holaa");
@@ -100,10 +101,11 @@ class ProductoWoocommerce implements ShouldQueue
     public function actualizar_woo($producto)
     {
 
-        $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
+        // $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
 
         $respuesta = [];
-        $respuesta['id'] = $resultado ? $resultado->post_id : "";
+        // $respuesta['id'] = $resultado ? $resultado->post_id : "";
+        $respuesta['id'] = "18114";
         $respuesta['sku'] = $producto->sku;
 
         $respuesta["sale_price"] = strval($producto->sale_price);
