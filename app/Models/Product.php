@@ -12,14 +12,11 @@ class Product extends Model
     protected $primaryKey = 'sku';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['sku','name', 'sale_price','regular_price','status'];
+    protected $fillable = ['sku', 'name', 'sale_price', 'regular_price', 'status'];
 
-    
-    public function productStore(){
+    public function productStore()
+    {
         return $this->HasMany(ProductStore::class, 'sku');
     }
 
-
-
-    
 }

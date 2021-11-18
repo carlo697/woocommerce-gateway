@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProductWooResource;
 use App\Models\Product;
 use App\Models\ProductStore;
 use App\Models\Store;
@@ -43,7 +42,6 @@ class ProductController extends Controller
         $product = Product::where('sku', $sku)->with('productStore')->first();
         return $product;
         return $this->actualizar_woo($product);
-        
 
     }
 
@@ -102,8 +100,6 @@ class ProductController extends Controller
             }
         }
     }
-
-    
 
     public function listProduct(Request $request)
     {
