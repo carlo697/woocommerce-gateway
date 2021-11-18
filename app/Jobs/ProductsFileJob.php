@@ -51,7 +51,7 @@ class ProductsFileJob implements ShouldQueue
                 Log::debug("No hay archivo para ser procesado");
                 return "No hay archivo para ser procesado";
             }
-            // buscar archivos para leer información
+            // buscar archivos para leer informaci��n
             $productsFile = $file->file;
             if (empty($productsFile)) {
                 Log::debug("no hay archivo");
@@ -80,6 +80,7 @@ class ProductsFileJob implements ShouldQueue
                 "sku" => "required",
                 "name" => "required",
             ];
+            Log::debug("Se esta Procesando");
             $validator = Validator::make($producto, $rule);
             if ($validator->fails()) {
                 continue;
@@ -97,7 +98,7 @@ class ProductsFileJob implements ShouldQueue
             if (!$resultado) {
                 Product::create($productInfo);
                 $this->ProductStore($producto);
-
+                Log::debug("PRODUCTO CREADO");
                 continue;
             }
             error_log("actualizado");

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\web;
 
-use App\Http\Controllers\Controller;
+use App\Models\Store;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductoStoreController extends Controller
 {
@@ -14,18 +15,21 @@ class ProductoStoreController extends Controller
         $query = $requets->get('query');
         $products = new Product;
         if ($query) {
-            $tiendas = $products->whereHas('productStore', function (Builder $builder) use ($query) {
+            $productTiendas = $products->whereHas('productStore', function (Builder $builder) use ($query) {
                 $builder->where('store_id', $query);
             })->with(['productStore' => function ($builder) use ($query) {
 
                 $builder->where('store_id', $query);
 
             }])->get();
-            return $tiendas;
+            
+        }
+        else{
+            $productTiendas = $products->with('productStore')->get();
         }
 
-        return $products->with('productStore')->get();
+        $tiendas = Store::all();
 
-        return view('home');
+        return view('home',compact('tiendas', 'productTiendas'));
     }
 }

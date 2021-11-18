@@ -14,6 +14,18 @@
                         </div>
                     @endif
 
+                    
+                    @foreach ($productTiendas as $role)
+                    <li>
+                        <input type="checkbox" name="roles[]" value="{{ $role}}"> {{ $role }}
+                    </li>
+                    @endforeach
+
+                    <br>
+                    <br>
+
+                    {{$tiendas}}
+
                 </div>
             </div>
         </div>

@@ -35,7 +35,11 @@ class ProductoWoocommerce implements ShouldQueue
      *
      * @return void
      */
-    
+    // public function middleware()
+    // {
+
+    //     return [(new WithoutOverlapping($this->id))];
+    // }
     public function handle()
     {
 
@@ -79,7 +83,7 @@ class ProductoWoocommerce implements ShouldQueue
         $responses = Http::pool(fn(Pool $pool) => $test->map(
             function ($item) use ($pool) {
                 $id = $item["body"]["id"];
-
+                Log::debug("actualizando producto con el id : $id y el sku: ". $item["body"]['sku']);
                 return $pool->withHeaders([
                     'consumer_key' => 'ck_fd6c1a59e0aa18902ff0aa3739b928285954f846',
                     'consumer_secret' => 'cs_a345f84f9e90c71feeaca7aa2b443060bb57f3d0',
@@ -105,7 +109,18 @@ class ProductoWoocommerce implements ShouldQueue
 
         $respuesta = [];
         $respuesta['name'] = $producto->name;
-        $respuesta['id'] = $resultado ? $resultado->post_id : "";
+        if($resultado)
+        {
+
+            $respuesta['id'] =  $resultado->post_id;
+            $respuesta['status'] = 'publish';
+        }
+        else
+        {
+            $respuesta['status'] = 'draft';
+            $respuesta['id'] =  "";
+        }
+         
 
         $respuesta['sku'] = $producto->sku;
 
