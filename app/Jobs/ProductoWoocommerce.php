@@ -35,11 +35,7 @@ class ProductoWoocommerce implements ShouldQueue
      *
      * @return void
      */
-    public function middleware()
-    {
-
-        return [(new WithoutOverlapping($this->id))];
-    }
+    
     public function handle()
     {
 
