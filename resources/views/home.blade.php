@@ -8,23 +8,68 @@
                 <div class="card-header">{{ __('Dashboard') }}</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Tiendas</th>
+                                <th scope="col">stock</th>
+                                <th scope="col">sale price</th>
+                                <th scope="col">Regular Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                    
-                    @foreach ($productTiendas as $role)
-                    <li>
-                        <input type="checkbox" name="roles[]" value="{{ $role}}"> {{ $role }}
-                    </li>
-                    @endforeach
+                            @foreach($productTiendas as $key)
+                            <tr>
 
-                    <br>
-                    <br>
 
-                    {{$tiendas}}
+                                <td scope="row">
+                                    SKU : {{$key->sku}},
+                                    <br>
+                                    Nombre : {{$key->name}}
+                                </td>
+                                <td>
+                                    @foreach($key->productStore as $valor)
+                                        {{$valor->tiendas->name}}
+                                        <hr>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach($key->productStore as $valor)
+                                        {{$valor->stock}}
+                                        <hr>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach($key->productStore as $valor)
+                                        {{$valor->sale_price}}
+                                        <hr>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach($key->productStore as $valor)
+                                        {{$valor->regular_price}}
+                                        <hr>
+                                    @endforeach
+                                </td>
+
+
+                                
+
+                            </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
+
+
+
+
+
+
+
+
 
                 </div>
             </div>

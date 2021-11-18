@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\web;
 
-use App\Models\Store;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class ProductoStoreController extends Controller
 {
@@ -22,14 +22,13 @@ class ProductoStoreController extends Controller
                 $builder->where('store_id', $query);
 
             }])->get();
-            
-        }
-        else{
+            // return $productTiendas;
+        } else {
             $productTiendas = $products->with('productStore')->get();
         }
 
         $tiendas = Store::all();
-
-        return view('home',compact('tiendas', 'productTiendas'));
+        $var =  response()->json($productTiendas);
+        return view('home', compact('tiendas', 'productTiendas'));
     }
 }
