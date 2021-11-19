@@ -7,9 +7,16 @@ use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class ProductoStoreController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $requets)
     {
         $query = $requets->get('query');
@@ -21,14 +28,31 @@ class ProductoStoreController extends Controller
 
                 $builder->where('store_id', $query);
 
-            }])->get();
+            }])->simplePaginate(10);
             // return $productTiendas;
         } else {
-            $productTiendas = $products->with('productStore')->get();
+            $productTiendas = $products->with('productStore')->simplePaginate(10);
         }
 
-        $tiendas = Store::all();
-        $var =  response()->json($productTiendas);
+        $tiendas = Store::simplePaginate(10);
+
         return view('home', compact('tiendas', 'productTiendas'));
+        // return View::make('home')->with(compact($tiendas))->with(compact($productTiendas));
+    }
+
+    public function search(Request $request)
+    {
+
+        $q = $request->get('q');
+
+        // get the products
+        $productos = Product::where('sku', 'LIKE', '%' . $q . '%')
+            ->orWhere('name', 'LIKE', '%' . $q . '%')->with('productStore')
+            ->simplePaginate(10);
+
+        // Render the view
+        // return response()->json($productos);
+
+        return view('search', compact('productos', 'q'));
     }
 }

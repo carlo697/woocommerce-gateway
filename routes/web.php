@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\web\ProductoStoreController;
@@ -13,7 +15,7 @@ use App\Http\Controllers\web\ProductoStoreController;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,10 +23,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 
 // listar productos del wgateway
 
-Route::get("/products", [ProductoStoreController::class, 'index']);
-
+Route::get("/", [ProductoStoreController::class, 'index'])->name('products.index');
+Route::post("/", [ProductoStoreController::class, 'index'])->name('products.index');
+// Search products
+Route::get('searchProduct', [ProductoStoreController::class, 'search'] )->name('producto.search');
 

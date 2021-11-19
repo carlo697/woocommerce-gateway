@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <form class="form-inline " action="{{ route('producto.search') }}">
+            <form class="form-inline ml-3 mr-2" action="{{ route('producto.search') }}">
                 @csrf
                 <div class="input-group input-group-sm">
                     <input class="form-control form-control-navbar" type="search" name="q" placeholder="Search"
@@ -16,15 +16,9 @@
                     </div>
                 </div>
             </form>
+            
             <div class="card">
-                <div class="card-header">Tiendas:
-                    <a href="{{ route('products.index') }}" class="btn btn-sm  btn-primary">Todas las tiendas </a>
-                    @foreach ( $tiendas as $tienda )
-                    <a href="{{ route('products.index',['query' => $tienda->id]) }}"
-                        class="btn btn-sm  btn-primary">{{$tienda->name}}</a>
-                    @endforeach
-
-                </div>
+                <h4 class="card-title m-4">resultado de busqueda para "{{$q}}"</h4>
 
                 <div class="card-body">
                     <table class="table">
@@ -40,7 +34,7 @@
                         <tbody>
 
 
-                            @foreach($productTiendas as $key)
+                            @foreach($productos as $key)
                             <tr>
 
 
@@ -82,11 +76,7 @@
                             @endforeach
 
                         </tbody>
-
                     </table>
-                    <div class="d-flex justify-content-center">
-                        {!! $productTiendas->links() !!}
-                    </div>
 
 
 
