@@ -27,7 +27,11 @@ class UserController extends Controller
 
         return back()->with('state', 'El usuario ha sido creado satisfactoriamente');
     }
-   
+    public function showRegistro()
+    {
+        return view('auth.register');
+        
+    }
 
     
 }

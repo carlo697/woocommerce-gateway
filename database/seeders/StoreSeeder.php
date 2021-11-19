@@ -31,5 +31,12 @@ class StoreSeeder extends Seeder
             'wc_id' => "3",
             'created_at' => Carbon::now()
         ]);
+
+        DB::table('users')->insert([
+            'name' => 'kervis vasquez',
+            'email' => 'kervisvasquez24@gmail.com',
+            'password' =>Hash::make("123456789"),
+            'created_at' => Carbon::now()
+        ]);
     }
 }
