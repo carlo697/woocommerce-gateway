@@ -2,13 +2,11 @@
 
 namespace App\Jobs;
 
-use App\Models\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Client\Pool;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -24,10 +22,10 @@ class ProductoWoocommerce implements ShouldQueue
      *
      * @return void
      */
-    private $id = "";
-    public function __construct($id)
+    private $productos;
+    public function __construct($productos)
     {
-        $this->id = $id;
+        $this->productos = $productos;
     }
 
     /**
@@ -45,10 +43,10 @@ class ProductoWoocommerce implements ShouldQueue
 
         error_log("holaa");
 
-        $productos = Product::where('status', 'to_process')->with('productStore')->limit(20)->get();
+        // $productos = Product::where('status', 'to_process')->with('productStore')->limit(20)->get();
 
         $divisiones = 5;
-        $cantidad = $productos->count();
+        $cantidad = $this->productos->count();
         error_log($cantidad);
 
         for ($i = 0; $i < $cantidad; $i += $divisiones) {
@@ -57,8 +55,8 @@ class ProductoWoocommerce implements ShouldQueue
 
             for ($j = 0; $j < $divisiones; $j++) {
                 if ($indice < $cantidad) {
-                    // array_push($array_respuesta, $this->actualizar_woo($productos[$indice]));
-                    $producto = $productos[$indice];
+                    // array_push($array_respuesta, $this->actualizar_woo($this->productos[$indice]));
+                    $producto = $this->productos[$indice];
                     $body = $this->actualizar_woo($producto);
 
                     $array_respuesta->add(["producto" => $producto, "body" => $body]);
@@ -83,11 +81,11 @@ class ProductoWoocommerce implements ShouldQueue
         $responses = Http::pool(fn(Pool $pool) => $test->map(
             function ($item) use ($pool) {
                 $id = $item["body"]["id"];
-                Log::debug("actualizando producto con el id : $id y el sku: ". $item["body"]['sku']);
+                Log::debug("actualizando producto con el id : $id y el sku: " . $item["body"]['sku']);
                 return $pool->withHeaders([
                     'consumer_key' => 'ck_fd6c1a59e0aa18902ff0aa3739b928285954f846',
                     'consumer_secret' => 'cs_a345f84f9e90c71feeaca7aa2b443060bb57f3d0',
-                ])->post("https://redvital.com/dev1/wp-json/wc/v3/products/$id", $item["body"]);
+                ])->post("https://redvital.com/dev1/wp-json/wc/v3/prgt5sgd56yd/$id", $item["body"]);
             })->all());
 
         error_log("Respuestas recibidas...");
@@ -108,19 +106,16 @@ class ProductoWoocommerce implements ShouldQueue
         $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
 
         $respuesta = [];
-        $respuesta['name'] = $producto->name;
-        if($resultado)
-        {
 
-            $respuesta['id'] =  $resultado->post_id;
+        if ($resultado) {
+
+            $respuesta['id'] = $resultado->post_id;
             $respuesta['status'] = 'publish';
-        }
-        else
-        {
+        } else {
             $respuesta['status'] = 'draft';
-            $respuesta['id'] =  "";
+            $respuesta['id'] = "";
+            $respuesta['name'] = $producto->name;
         }
-         
 
         $respuesta['sku'] = $producto->sku;
 

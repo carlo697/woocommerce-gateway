@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FileProductsResource;
 use App\Models\FileProduct;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Jobs\ProductsFileJob;
 use Illuminate\Http\Response;
+use App\Jobs\ProductoWoocommerce;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class FileProductController extends Controller
 {
@@ -32,7 +33,6 @@ class FileProductController extends Controller
         $data = collect($request->data);
         $sizeObjet = sizeof($data);
 
-        
         $objetos = collect([]);
         $chunkSize = 5000;
 
@@ -47,9 +47,12 @@ class FileProductController extends Controller
                 "status" => "pending",
             ];
             $fileProduct = FileProduct::create($file);
-            $objetoCreado = new FileProductsResource($fileProduct);
+            // $objetoCreado = new FileProductsResource($fileProduct);
 
-            $objetos->add($objetoCreado);
+            $objetos->add($fileProduct);
+
+            ProductsFileJob::dispatch($fileProduct);
+
         }
 
         return $this->showAll($objetos);

@@ -2,21 +2,20 @@
 
 namespace App\Jobs;
 
-use App\Models\Store;
-use App\Models\Product;
 use App\Models\FileProduct;
+use App\Models\Product;
 use App\Models\ProductStore;
+use App\Models\Store;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\Middleware\WithoutOverlapping;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductsFileJob implements ShouldQueue
 {
@@ -27,9 +26,10 @@ class ProductsFileJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    private $fileProduct;
+    public function __construct($fileProduct)
     {
-        //
+        $this->fileProduct = $fileProduct;
     }
 
     /**
@@ -46,23 +46,24 @@ class ProductsFileJob implements ShouldQueue
     {
         // validar si existe ProductFile sin Procesar
         try {
-            $file = FileProduct::where('status', '=', 'pending')->orWhere('status', '=', 'processing')->first();
-            if (!$file) {
-                Log::debug("No hay archivo para ser procesado");
-                return "No hay archivo para ser procesado";
-            }
-            // buscar archivos para leer informaci��n
-            $productsFile = $file->file;
-            if (empty($productsFile)) {
-                Log::debug("no hay archivo");
-                return;
-            }
-            $file->status = 'processing';
-            $file->save();
-            $contentFile = Storage::disk('local')->get($productsFile);
-            $this->productos($contentFile, $file);
-            $file->status = 'done';
-            return $file->save();
+            // $file = FileProduct::where('status', '=', 'pending')->orWhere('status', '=', 'processing')->first();
+            // if (!$file) {
+            //     Log::debug("No hay archivo para ser procesado");
+            //     return "No hay archivo para ser procesado";
+            // }
+            // // buscar archivos para leer informaci��n
+            // $productsFile = $file->file;
+            // if (empty($productsFile)) {
+            //     Log::debug("no hay archivo");
+            //     return;
+            // }
+
+            $this->fileProduct->status = 'processing';
+            $this->fileProduct->save();
+            $contentFile = Storage::disk('local')->get($this->fileProduct->file);
+            $this->productos($contentFile);
+            $this->fileProduct->status = 'done';
+            return $this->fileProduct->save();
         } catch (\Exception$e) {
             error_log($e);
 
@@ -74,6 +75,12 @@ class ProductsFileJob implements ShouldQueue
 
         $productos = json_decode($contenido, true);
         $timeInit = Carbon::now();
+
+        
+
+        $contador = 0;
+        $productosParaProcesar = collect();
+
         foreach ($productos as $producto) {
 
             $rule = [
@@ -92,19 +99,30 @@ class ProductsFileJob implements ShouldQueue
                 "regular_price" => $producto['regular_price'],
                 "status" => "to_process",
             ];
+
             $resultado = Product::where('sku', $producto['sku'])->first();
             $diff = $timeInit->diffInSeconds(Carbon::now());
 
-            if (!$resultado) {
-                Product::create($productInfo);
+            if ($resultado) {
+                error_log("actualizado");
+                $resultado = $resultado->update($productInfo);
+                $this->ProductStore($producto);
+                error_log("se actualizo producto con sku " . $producto['sku']);
+            } else {
+                $resultado = Product::create($productInfo);
                 $this->ProductStore($producto);
                 Log::debug("PRODUCTO CREADO");
-                continue;
             }
-            error_log("actualizado");
-            $resultado->update($productInfo);
-            $this->ProductStore($producto);
-            error_log("se actualizo producto con sku " . $producto['sku']);
+            
+            $productosParaProcesar->add($resultado);
+            
+            $contador++;
+            if ($contador >= 20) {
+                ProductoWoocommerce::dispatch($productosParaProcesar);
+
+                $contador = 0;
+                $productosParaProcesar = collect();
+            }
 
         }
 
