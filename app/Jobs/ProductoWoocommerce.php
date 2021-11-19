@@ -85,7 +85,7 @@ class ProductoWoocommerce implements ShouldQueue
                 return $pool->withHeaders([
                     'consumer_key' => 'ck_fd6c1a59e0aa18902ff0aa3739b928285954f846',
                     'consumer_secret' => 'cs_a345f84f9e90c71feeaca7aa2b443060bb57f3d0',
-                ])->post("https://redvital.com/dev1/wp-json/wc/v3/prgt5sgd56yd/$id", $item["body"]);
+                ])->post("https://redvital.com/dev1/wp-json/wc/v3/products/$id", $item["body"]);
             })->all());
 
         error_log("Respuestas recibidas...");
