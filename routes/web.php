@@ -4,6 +4,8 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\web\UserController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\web\ProductoStoreController;
 
 /*
@@ -32,3 +34,6 @@ Route::post("/", [ProductoStoreController::class, 'index'])->name('products.inde
 // Search products
 Route::get('searchProduct', [ProductoStoreController::class, 'search'] )->name('producto.search');
 
+Route::get('registro', [UserController::class,  'showRegistro'])->name('registro');
+Route::post('registro', [UserController::class ,'register']);
+// Route::post('registro-update', [UserController::class ,'update']);
