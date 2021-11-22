@@ -119,12 +119,12 @@ class ProductsFileJob implements ShouldQueue
             $contador++;
             if ($contador >= 20) {
                 ProductoWoocommerce::dispatch($productosParaProcesar);
-
                 $contador = 0;
                 $productosParaProcesar = collect();
             }
-
         }
+
+        ProductoWoocommerce::dispatch($productosParaProcesar);
 
         return "completado los productos";
 
