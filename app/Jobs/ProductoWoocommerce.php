@@ -57,9 +57,9 @@ class ProductoWoocommerce implements ShouldQueue
                 if ($indice < $cantidad) {
                     // array_push($array_respuesta, $this->actualizar_woo($this->productos[$indice]));
                     $producto = $this->productos[$indice];
-                    $body = $this->actualizar_woo($producto);
+                    $body = $this->actualizar_woo($this->productos);
 
-                    $array_respuesta->add(["producto" => $producto, "body" => $body]);
+                    $array_respuesta->add(["producto" => $this->productos, "body" => $body]);
                     $indice++;
                 } else {
                     break;
