@@ -102,7 +102,7 @@ class ProductoWoocommerce implements ShouldQueue
     }
     public function actualizar_woo($producto)
     {
-
+        error_log($producto);
         $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
 
         $respuesta = [];
