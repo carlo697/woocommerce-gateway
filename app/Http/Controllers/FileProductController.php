@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FileProduct;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Jobs\ProductsFileJob;
+use App\Models\FileProduct;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Jobs\ProductoWoocommerce;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class FileProductController extends Controller
 {
@@ -63,5 +63,50 @@ class FileProductController extends Controller
     {
 
         return $this->showOne($fileProduct);
+    }
+
+    public function prueba()
+    {
+        $respuesta = Http::withHeaders([
+            'Authorization' => 'Basic ' . base64_encode('ck_5c29b967481631bec7f2cb9a427e255877955bf6:cs_ee563f1678a6b0323fa466b70de2197e047dbef8'),
+
+        ])->post("https://redvital.com/dev1/wp-json/wc/v3/products", array(
+            'status' => 'draft',
+            'id' => '',
+            'name' => 'productos_prueba_gateway20',
+            'sku' => '2020',
+            'sale_price' => '11',
+            'regular_price' => '12',
+            'meta_data' => array(
+                0 => array(
+                    'key' => 'wcmlim_stock_at_4073',
+                    'value' => '5',
+                ),
+                1 => array(
+                    'key' => 'wcmlim_sale_price_at_4073',
+                    'value' => '12',
+                ),
+                2 => array(
+                    'key' => 'wcmlim_regular_price_at_4073',
+                    'value' => '13',
+                ),
+                3 => array(
+                    'key' => 'wcmlim_stock_at_4075',
+                    'value' => '4',
+                ),
+                4 => array(
+                    'key' => 'wcmlim_sale_price_at_4075',
+                    'value' => '10',
+                ),
+                5 => array(
+                    'key' => 'wcmlim_regular_price_at_4075',
+                    'value' => '13',
+                ),
+            ),
+        ));
+        error_log($respuesta->ok());
+        error_log($respuesta->successful());
+        error_log($respuesta->failed());
+        return $respuesta->body();
     }
 }

@@ -45,6 +45,8 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
     Route::post("/file-products", [FileProductController::class, 'store']);
     Route::get("/file-products/{fileProduct}", [FileProductController::class, 'show']);
     
+    Route::get("/prueba2", [FileProductController::class, 'prueba']);
+    
 
     // actualizacion de productos
     Route::get("/products", [ProductController::class, 'actualizar_woo']);

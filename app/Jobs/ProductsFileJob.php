@@ -76,8 +76,6 @@ class ProductsFileJob implements ShouldQueue
         $productos = json_decode($contenido, true);
         $timeInit = Carbon::now();
 
-        
-
         $contador = 0;
         $productosParaProcesar = collect();
 
@@ -88,6 +86,7 @@ class ProductsFileJob implements ShouldQueue
                 "name" => "required",
             ];
             Log::debug("Se esta Procesando");
+
             $validator = Validator::make($producto, $rule);
             if ($validator->fails()) {
                 continue;
@@ -104,22 +103,23 @@ class ProductsFileJob implements ShouldQueue
             $diff = $timeInit->diffInSeconds(Carbon::now());
 
             if ($resultado) {
-                error_log("actualizado");
-                $resultado = $resultado->update($productInfo);
+                Log::debug("actualizado");
+                $resultado->update($productInfo);
                 $this->ProductStore($producto);
-                error_log("se actualizo producto con sku " . $producto['sku']);
+                Log::debug("se actualizo producto con sku " . $producto['sku']);
             } else {
                 $resultado = Product::create($productInfo);
                 $this->ProductStore($producto);
                 Log::debug("PRODUCTO CREADO");
             }
-            
+
             $productosParaProcesar->add($resultado);
-            
+
             $contador++;
             if ($contador >= 20) {
                 ProductoWoocommerce::dispatch($productosParaProcesar);
                 $contador = 0;
+
                 $productosParaProcesar = collect();
             }
         }

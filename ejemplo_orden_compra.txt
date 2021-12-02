@@ -1,0 +1,81 @@
+generar qr de producto 
+- proceso para crear factura cuando se realiza una compra desde el ecommerce.
+
+cuando se completa el proceso de compra y se valida el pago en el Ecommerce, se envia una solicitud POST a la url del gateway perteneciente a la orden de compra.
+se crea un json con la estructura e informacion de la orden de compra. en la siguiente linea de muestra un ejemplo del json ya estructurado:
+{
+   "id":35492,
+   "status":"completed",
+   "products":[
+      {
+         "id":45,
+         "name":"24K ANTI-HAIR LOSS TREAT.NELLY PROX10AMP",
+         "quantity":1,
+         "sku":null,
+         "price":122.4200000000000017053025658242404460906982421875,
+         "subtotal":"122.42",
+         "subtotal_tax":"0.00",
+         "total":"122.42",
+         "total_tax":"0.00",
+         "taxes":[
+            
+         ],
+         "location":"kervis_pruebas"
+      }
+   ],
+   "discount_total":"0.00",
+   "discount_tax":"0.00",
+   "shipping_total":"0.00",
+   "shipping_tax":"0.00",
+   "cart_tax":"0.00",
+   "total":"122.42",
+   "total_tax":"0.00",
+   "billing":{
+      "first_name":"kervis vasquez",
+      "last_name":"vasquez",
+      "company":null,
+      "address_1":"casa 12",
+      "address_2":null,
+      "city":"Municipio Bejuma (Bejuma)",
+      "state":"CA",
+      "postcode":"2015",
+      "country":"VE",
+      "email":"desarrollo3.premieresi@gmail.com",
+      "phone":"04244444161",
+      "ci":"25672732"
+   },
+   "date_completed":"2021-12-01T15:54:50",
+   "date_paid":"2021-12-01T15:44:22",
+   "currency":"VES",
+   "currency_symbol":"Bs.",
+   "payment_info":{
+      "method":"pago_movil",
+      "reference":"853233365158",
+      "total":"122.42"
+   }
+}
+
+
+
+se creara una ruta(end point) para que se pueda poder acceder a las ordenes de compras que aun no se han procesado y las que ya se procesaron en el sistema OASIS.
+Cuando se procese la orden de compra en el sistema OASIS Y SE GENERE LA FACTURA este debe mandar una solicitud con el metodo PATCH a la ruta de la orden de compra y en el cuerpo de REQUEST 
+contenga el numero de la factura generada como se ejemplifica en la ( RUTA 3 ).
+
+
+METHOD : GET  ( RUTA 1 )
+mostrar ordenes sin procesar: 
+{{URL_GATEWAY}}/api/ordenes?status=sin_procesar
+
+
+
+mostrar individualmente una orden de compra (RUTA 2 )
+METHOD : GET
+{{URL_GATEWAY}}/api/ordenes/{$id_orden}
+ 
+
+Actualizar la orden de compra (RUTA 3 )
+METHOD : PATCH
+{{URL_GATEWAY}}/api/ordenes/{$id_orden}
+{
+    num_factura_oasis: '123456789'
+}

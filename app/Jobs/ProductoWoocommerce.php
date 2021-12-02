@@ -47,7 +47,6 @@ class ProductoWoocommerce implements ShouldQueue
 
         $divisiones = 5;
         $cantidad = $this->productos->count();
-        error_log($cantidad);
 
         for ($i = 0; $i < $cantidad; $i += $divisiones) {
             $indice = $i;
@@ -57,6 +56,7 @@ class ProductoWoocommerce implements ShouldQueue
                 if ($indice < $cantidad) {
                     // array_push($array_respuesta, $this->actualizar_woo($this->productos[$indice]));
                     $producto = $this->productos[$indice];
+
                     $body = $this->actualizar_woo($producto);
 
                     $array_respuesta->add(["producto" => $producto, "body" => $body]);
@@ -82,28 +82,31 @@ class ProductoWoocommerce implements ShouldQueue
             function ($item) use ($pool) {
                 $id = $item["body"]["id"];
                 Log::debug("actualizando producto con el id : $id y el sku: " . $item["body"]['sku']);
+                Log::debug("https://redvital.com/dev1/wp-json/wc/v3/products/$id");
+                Log::debug("cuerpo del query");
+                Log::debug($item["body"]);
                 return $pool->withHeaders([
-                    'consumer_key' => 'ck_fd6c1a59e0aa18902ff0aa3739b928285954f846',
-                    'consumer_secret' => 'cs_a345f84f9e90c71feeaca7aa2b443060bb57f3d0',
+                    'Authorization' => 'Basic ' . base64_encode('ck_5c29b967481631bec7f2cb9a427e255877955bf6:cs_ee563f1678a6b0323fa466b70de2197e047dbef8'),
                 ])->post("https://redvital.com/dev1/wp-json/wc/v3/products/$id", $item["body"]);
             })->all());
 
-        error_log("Respuestas recibidas...");
+        Log::debug("Respuestas recibidas...");
 
         for ($i = 0; $i < $test->count(); $i++) {
             $producto = $test[$i]["producto"];
             $response = $responses[$i];
-
-            Log::debug("Producto: " . $producto["sku"] . ", actualizando, con estado: " . ($response->ok() ? "OK" : "FAIL"));
-            $estadoNuevo = $response->ok() ? "success" : "failed";
+            Log::debug($producto);
+            Log::debug("Producto: " . $producto["sku"] . ", actualizando, con estado: " . ( $response->successful() ? "OK" : "FAIL"));
+            Log::debug($response->body());
+            $estadoNuevo = $response->successful() ? "success" : "failed";
             $producto->update(["status" => $estadoNuevo]);
         }
 
     }
     public function actualizar_woo($producto)
     {
-        error_log($producto);
-        $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->first();
+
+        $resultado = DB::connection("woocommerce")->table('wplp_postmeta')->where('meta_value', $producto->sku)->where('meta_key', "_sku")->first();
 
         $respuesta = [];
 
@@ -117,7 +120,8 @@ class ProductoWoocommerce implements ShouldQueue
             $respuesta['name'] = $producto->name;
         }
 
-        $respuesta['sku'] = $producto->sku;
+        $respuesta['sku'] = "$producto->sku";
+        $respuesta['manage_stock'] = true;
 
         $respuesta["sale_price"] = strval($producto->sale_price);
 
