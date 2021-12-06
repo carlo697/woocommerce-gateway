@@ -1,3 +1,4 @@
+Tarea 2 crear vista. 
 generar qr de producto 
 - proceso para crear factura cuando se realiza una compra desde el ecommerce.
 
@@ -20,7 +21,7 @@ se crea un json con la estructura e informacion de la orden de compra. en la sig
          "taxes":[
             
          ],
-         "location":"kervis_pruebas"
+         "location":"kervis_pruebas" //TODO REEMPLAZAR NOMBRE POR CODIGO DE UBICACIÓN
       }
    ],
    "discount_total":"0.00",
@@ -57,7 +58,7 @@ se crea un json con la estructura e informacion de la orden de compra. en la sig
 
 
 
-se creara una ruta(end point) para que se pueda poder acceder a las ordenes de compras que aun no se han procesado y las que ya se procesaron en el sistema OASIS.
+se creara una ruta(end point) para  acceder a las ordenes de compras que aun no se han procesado y las que ya se procesaron en el sistema OASIS.
 Cuando se procese la orden de compra en el sistema OASIS Y SE GENERE LA FACTURA este debe mandar una solicitud con el metodo PATCH a la ruta de la orden de compra y en el cuerpo de REQUEST 
 contenga el numero de la factura generada como se ejemplifica en la ( RUTA 3 ).
 
@@ -65,6 +66,9 @@ contenga el numero de la factura generada como se ejemplifica en la ( RUTA 3 ).
 METHOD : GET  ( RUTA 1 )
 mostrar ordenes sin procesar: 
 {{URL_GATEWAY}}/api/ordenes?status=sin_procesar
+
+mostrar ordenes procesadas: 
+{{URL_GATEWAY}}/api/ordenes
 
 
 
@@ -79,3 +83,25 @@ METHOD : PATCH
 {
     num_factura_oasis: '123456789'
 }
+
+
+**** modificar que el id de las ordenes de compra coindidan con el id de la orden de compra de woocommerce ****
+
+crear tabla que almacene los nombre de las tiendas asociada con su numero de OASIS.
+
+
+// TODO TAREAS DEL GATEWAY 
+
+
+en el gateway debe mostrar la siguiente infromación : 
+
+productos {
+sku tiendas , stock, sale price , regular price ,
+} , 
+
+ordenes de compra generada desde woocommerce. 
+
+LISTAR TODAS LAS ORDENES DE COMPRA SIN FACTURAR.
+LISTAR TODAS LAS ORDENES DE COMPRA SIN FACTURADA. 
+MOSTRAR ORDEN DE COMPRA DE FORMA INDIVIDUAL. 
+Y ACTULAIZAR LA ORDEN DE COMPRA COMO PROCESADA 

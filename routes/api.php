@@ -25,8 +25,13 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
 // API
 // Route::middleware('redvital')->group(function () {
     // orden de compras
+    // index de orden de compra 
+    Route::get("/orders", [OrderController::class, 'index']);
+    // mostrar orden de compra
     Route::get("/orders/{order}", [OrderController::class, 'show']);
+    // crear orden de compra
     Route::post("/orders", [OrderController::class, 'store']);
+    // actualizar orden de compra
     Route::post("/orders/{id}", [OrderController::class, 'update']);
 
     // Productos 
