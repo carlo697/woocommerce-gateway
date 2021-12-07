@@ -14,8 +14,9 @@ class CreateOrdersTable extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->unsignedBigInteger("order_id");
+            $table->unsignedBigInteger("order_id")->primary();
             $table->string("invoice_number")->nullable();
+            $table->boolean("invoiced")->default(true);
             $table->json("original_resource");
             $table->json("processed_resource");
             $table->timestamps();

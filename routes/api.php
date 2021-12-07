@@ -28,11 +28,11 @@ Route::middleware('redvital')->get('/user', function (Request $request) {
     // index de orden de compra 
     Route::get("/orders", [OrderController::class, 'index']);
     // mostrar orden de compra
-    Route::get("/orders/{order}", [OrderController::class, 'show']);
+    Route::get("/orders/{id}", [OrderController::class, 'show']);
     // crear orden de compra
     Route::post("/orders", [OrderController::class, 'store']);
     // actualizar orden de compra
-    Route::post("/orders/{id}", [OrderController::class, 'update']);
+    Route::put("/orders/{order}", [OrderController::class, 'update']);
 
     // Productos 
     Route::post("/products/lista", [ProductController::class, 'listProduct']);

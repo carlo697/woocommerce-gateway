@@ -9,11 +9,12 @@ class Order extends Model
 {
     use HasFactory;
     protected $table = 'orders';
-    protected $primaryKey = 'orden_id';
+    protected $primaryKey = 'order_id';
     public $incrementing = false;
+    protected $keyType = 'string';
     protected $casts = [
         "processed_resource" => "array",
     ];
 
-    protected $fillable = ['order_id', 'invoice_number', 'original_resource', 'processed_resource'];
+    protected $fillable = ['order_id', 'invoice_number','invoiced', 'original_resource', 'processed_resource'];
 }
