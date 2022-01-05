@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         // $schedule->call(function () {
         //     ProductoWoocommerce::dispatch();
         // })->name("Product Woocommerce");
-        $schedule->command('gateway:start')->everyMinute()->name("someName")->withoutOverlapping();
+        
         $schedule->command('queue:work')->everyMinute()->name("someName")->withoutOverlapping();
         
         // $schedule->job(new ProductoWoocommerce("ProductoWoocommerce"))->everyMinute()->name("ProductoWoocommerce")->withoutOverlapping();

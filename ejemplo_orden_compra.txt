@@ -98,9 +98,7 @@ en el gateway debe mostrar la siguiente infromación :
 productos {
 sku tiendas , stock, sale price , regular price ,
 } , 
-
 ordenes de compra generada desde woocommerce. 
-
 LISTAR TODAS LAS ORDENES DE COMPRA SIN FACTURAR.
 LISTAR TODAS LAS ORDENES DE COMPRA SIN FACTURADA. 
 MOSTRAR ORDEN DE COMPRA DE FORMA INDIVIDUAL. 
